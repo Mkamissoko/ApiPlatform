@@ -59,13 +59,12 @@ class Recipe
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
-    private ?Category $categories = null;
+    private ?Category $category = null;
 
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->category = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,14 +189,14 @@ class Recipe
         return $this;
     }
 
-    public function getCategories(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categories;
+        return $this->category;
     }
 
-    public function setCategories(?Category $categories): static
+    public function setCategory(?Category $category): static
     {
-        $this->categories = $categories;
+        $this->category = $category;
 
         return $this;
     }

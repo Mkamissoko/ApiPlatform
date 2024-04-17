@@ -17,9 +17,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['ingredient:read']],
     operations: [
         new Get(),
-        new GetCollection(normalizationContext:['groups'=>['ingredient:recipe']]),
+        new GetCollection(normalizationContext:['groups'=>['ingredient:recipe', 'ingredient:read']]),
         new Post(),
         new Delete(),
         new Patch(),
@@ -36,6 +37,7 @@ class Ingredient
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['ingredient:read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -43,8 +45,6 @@ class Ingredient
     #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ingredients')]
     private Collection $recipes;
 
-    #[ORM\Column]
-    private ?int $quantity = null;
 
     public function __construct()
     {
@@ -88,18 +88,6 @@ class Ingredient
     public function removeRecipe(Recipe $recipe): static
     {
         $this->recipes->removeElement($recipe);
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): static
-    {
-        $this->quantity = $quantity;
 
         return $this;
     }
